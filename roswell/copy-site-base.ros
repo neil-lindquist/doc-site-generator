@@ -35,8 +35,10 @@ Options
         (site-clone-path (concatenate 'string (uiop:getenv "HOME") "/neil-lindquist.github.io/")))
 
     ; copy the non-configuration files
-    (copy-directory:copy (uiop:ensure-absolute-pathname input-dir (uiop:getcwd))
-                         (uiop:ensure-absolute-pathname output-dir (uiop:getcwd)))
+    (copy-directory:copy (uiop:ensure-absolute-pathname (uiop:ensure-directory-pathname input-dir)
+                                                        (uiop:getcwd))
+                         (uiop:ensure-absolute-pathname (uiop:ensure-directory-pathname output-dir)
+                                                        (uiop:getcwd)))
 
     ; download a copy of the site to grab files from
     (uiop:run-program (list "git"
