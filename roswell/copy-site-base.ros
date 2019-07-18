@@ -49,7 +49,7 @@ Options
                            (sub-dir output-dir dir)))
 
     ; append the base _config with the project specific _config
-    (with-open-file (stream (sub-dir output-dir "_config.yml")
+    (with-open-file (out-stream (sub-dir output-dir "_config.yml")
                      :direction :output
                      :external-format :utf-8
                      :if-exists :overwrite)
