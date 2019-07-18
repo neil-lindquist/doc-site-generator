@@ -27,6 +27,8 @@ Options
 
 (defun main (&rest argv)
 
+  (format t "copying site base~%")
+
   (unless (= 2 (length argv))
     (show-help))
 
