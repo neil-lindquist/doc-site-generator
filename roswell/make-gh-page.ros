@@ -7,17 +7,17 @@ exec ros -Q -- $0 "$@"
 (defun main (&rest argv)
 
   (unless (= 2 (length argv))
-    (error "Need a source and a destination")
+    (error "Need a source and a destination"))
 
-    (with-open-file (out-stream  (second argv)
-                     :direction :output
+  (with-open-file (out-stream (second argv)
+                   :direction :output
+                   :external-format :utf-8)
+
+    (format out-stream "---~%layout: page~%meta-description:")
+    (uiop:copy-stream-to-stream *standard-input* out-stream)
+    (format out-stream "---~%~%")
+
+    (with-open-file (in-stream (first argv)
+                     :direction :input
                      :external-format :utf-8)
-
-      (format out-stream "---~%layout: page~%meta-description:")
-      (uiop:copy-stream-to-stream *standard-input* out-stream)
-      (format out-stream "---~%~%")
-
-      (with-open-file (in-stream (first argv)
-                       :direction :input
-                       :external-format :utf-8)
-        (uiop:copy-stream-to-stream in-stream out-stream)))))
+      (uiop:copy-stream-to-stream in-stream out-stream))))
