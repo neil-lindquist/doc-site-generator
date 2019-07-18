@@ -11,13 +11,13 @@ exec ros -Q -- $0 "$@"
 
     (with-open-file (out-stream (uiop:ensure-absolute-pathname (second argv) (uiop:getcwd)))
                    :direction :output
-                   :external-format :utf-8)
+                   :external-format :utf-8
 
-    (format out-stream "---~%layout: page~%meta-description:")
-    (uiop:copy-stream-to-stream *standard-input* out-stream)
-    (format out-stream "---~%~%")
+      (format out-stream "---~%layout: page~%meta-description:")
+      (uiop:copy-stream-to-stream *standard-input* out-stream)
+      (format out-stream "---~%~%")
 
-    (with-open-file (in-stream (uiop:ensure-absolute-pathname(first argv) (uiop:getcwd))
-                     :direction :input
-                     :external-format :utf-8)
-      (uiop:copy-stream-to-stream in-stream out-stream))))
+      (with-open-file (in-stream (uiop:ensure-absolute-pathname(first argv) (uiop:getcwd))
+                       :direction :input
+                       :external-format :utf-8)
+        (uiop:copy-stream-to-stream in-stream out-stream)))))
