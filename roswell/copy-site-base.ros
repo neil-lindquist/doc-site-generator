@@ -1,0 +1,63 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+
+(ql:quickload '(:iterate :copy-directory) :silent t)
+
+(defpackage :ros.script.copy-site-base
+  (:use :cl
+        :iterate))
+(in-package :ros.script.copy-site-base)
+
+
+(defun show-help ()
+  (format t "~
+Usage: copy-site-base [options] <input-directory> <output-directory>
+Copies the basic site files to match the theme of neil-lindquist.github.io.
+Options
+--help|-h       - Shows this help message~%")
+  (uiop:quit 2))
+
+
+(defun sub-dir (base child)
+  (uiop:ensure-absolute-pathname (concatenate 'string base "/" child) (uiop:getcwd)))
+
+
+(defun main (argv)
+
+  (unless (= 2 (length argv))
+    (show-help))
+
+  (let ((input-dir (first argv))
+        (output-dir (second argv))
+        (site-clone-path (concatenate 'string (uiop:getenv "HOME") "/neil-lindquist.github.io/")))
+
+    ; copy the non-configuration files
+    (copy-directory:copy input-dir output-dir)
+
+    ; download a copy of the site to grab files from
+    (uiop:run-program (list "git"
+                            "clone"
+                            "https://github.com/neil-lindquist/neil-lindquist.github.io.git"
+                            site-clone-path))
+
+    ; copy duplicated directories to the output
+    (iter (for dir in '("_data/" "_includes/" "_layouts/"))
+      (copy-directory:copy (sub-dir site-clone-path dir)
+                           (sub-dir output-dir dir)))
+
+    ; append the base _config with the project specific _config
+    (with-open-file (stream (sub-dir output-dir "_config.yml")
+                     :direction :output
+                     :external-format :utf-8
+                     :if-exists :overwrite)
+      (with-open-file (in-stream (sub-dir site-clone-path "_config.yml")
+                       :direction :input
+                       :external-format :utf-8)
+        (uiop:copy-stream-to-stream in-stream out-stream))
+      (with-open-file (in-stream (sub-dir input-dir "_config.yml")
+                       :direction :input
+                       :external-format :utf-8)
+        (uiop:copy-stream-to-stream in-stream out-stream)))))
