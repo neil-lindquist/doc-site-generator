@@ -1,7 +1,8 @@
-(defpackage :docs
+(defpackage :doc-gen
   (:use :cl)
   (:export #:print-documentation
            #:print-package-documentation))
+(in-package :doc-gen)
 
 (defun sanitize-string (s)
   (cl-ppcre:regex-replace-all "\\*" (string s) "\\*"))
