@@ -9,15 +9,15 @@ exec ros -Q -- $0 "$@"
   (unless (= 2 (length argv))
     (error "Need a source and a destination")
 
-    (with-open-file (out-stream (uiop:ensure-absolute-pathname (second argv) (uiop:getcwd)))
-                   :direction :output
-                   :external-format :utf-8
+    (with-open-file (out-stream  (second argv)
+                     :direction :output
+                     :external-format :utf-8)
 
       (format out-stream "---~%layout: page~%meta-description:")
       (uiop:copy-stream-to-stream *standard-input* out-stream)
       (format out-stream "---~%~%")
 
-      (with-open-file (in-stream (uiop:ensure-absolute-pathname(first argv) (uiop:getcwd))
+      (with-open-file (in-stream (first argv)
                        :direction :input
                        :external-format :utf-8)
         (uiop:copy-stream-to-stream in-stream out-stream)))))
