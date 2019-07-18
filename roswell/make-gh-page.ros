@@ -4,7 +4,7 @@
 exec ros -Q -- $0 "$@"
 |#
 
-(defun main (argv)
+(defun main (&rest argv)
 
   (unless (= 2 (length argv))
     (error "Need a source and a destination")

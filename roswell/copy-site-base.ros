@@ -25,7 +25,7 @@ Options
   (uiop:ensure-absolute-pathname (concatenate 'string base "/" child) (uiop:getcwd)))
 
 
-(defun main (argv)
+(defun main (&rest argv)
 
   (unless (= 2 (length argv))
     (show-help))
