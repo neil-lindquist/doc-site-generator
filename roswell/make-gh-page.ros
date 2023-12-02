@@ -13,7 +13,7 @@ exec ros -Q -- $0 "$@"
                    :direction :output
                    :external-format :utf-8)
 
-    (format out-stream "---~%layout: page~%meta-description:")
+    (format out-stream "---~%layout: page~%show-avatar: false~%meta-description:")
     (uiop:copy-stream-to-stream *standard-input* out-stream)
     (format out-stream "---~%~%")
 
